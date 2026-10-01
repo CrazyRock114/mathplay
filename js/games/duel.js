@@ -25,7 +25,7 @@ GameFactories.duel = function (stage, ctx) {
     const kind = rnd(3);
     let a, b, ans, text;
     if (kind === 0) { a = 5 + rnd(30); b = 5 + rnd(30); ans = a + b; text = a + '+' + b; }
-    else if (kind === 1) { a = 20 + rnd(50); b = 5 + rnd(19); ans = a - b; text = a + '−' + b; }
+    else if (kind === 1) { a = 20 + rnd(50); b = 5 + rnd(Math.min(20, a - 9)); ans = a - b; text = a + '−' + b; }
     else { a = 3 + rnd(9); b = 3 + rnd(9); ans = a * b; text = a + '×' + b; }
     const set = new Set([ans]);
     while (set.size < 4) {

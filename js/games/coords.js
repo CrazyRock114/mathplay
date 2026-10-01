@@ -29,7 +29,7 @@ GameFactories.coords = function (stage, ctx) {
   }
 
   function newClue() {
-    const remaining = gemCells.map((g, i) => g).filter((_, i) => !found.includes(i));
+    const remaining = gemCells.filter(g => !found.includes(g)); // global indices, actually-found excluded
     const idx = remaining[Math.floor(Math.random() * remaining.length)];
     clue = idx;
     clueEl.innerHTML = '🎯 ( <b>' + ((idx % N) + 1) + '</b> , <b>' + (Math.floor(idx / N) + 1) + '</b> )';
@@ -67,6 +67,7 @@ GameFactories.coords = function (stage, ctx) {
     }
     gems = 0; tries = TRIES; found = []; done = false;
     hud.gems(0); hud.tries(TRIES);
+    hud.best(GameKit.getBest('coords'));
     cells.forEach(c => { c.className = 'coords-cell'; c.textContent = ''; });
     newClue();
   }

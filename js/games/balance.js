@@ -45,9 +45,10 @@ GameFactories.balance = function (stage, ctx) {
     if (type === 'add') { x = 2 + rnd(15); a = 2 + rnd(12); text = 'x + ' + a + ' = ' + (x + a); }
     else if (type === 'sub') { x = 6 + rnd(20); a = 2 + rnd(5); text = 'x − ' + a + ' = ' + (x - a); }
     else if (type === 'mul') { x = 2 + rnd(10); a = 2 + rnd(8); text = a + ' · x = ' + (a * x); }
-    else { x = 2 + rnd(10); a = 2 + rnd(6); text = 'x ÷ ' + a + ' = ' + x + '  →  x = ?'; }
+    else { x = 2 + rnd(10); a = 2 + rnd(6); text = (x * a) + ' ÷ ' + a + ' = ?'; }
     return { correct: x, text };
   }
+  GameFactories.balance._test = { makeQuestion };
 
   function render() {
     q = makeQuestion();

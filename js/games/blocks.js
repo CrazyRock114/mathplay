@@ -74,6 +74,7 @@ GameFactories.blocks = function (stage, ctx) {
       lines += cleared;
       score += [0, 100, 300, 500, 800][cleared];
       hud.lines(lines); hud.score(score);
+      schedule(); // re-arm the gravity interval so speed-up takes effect
     }
     spawn();
     draw();

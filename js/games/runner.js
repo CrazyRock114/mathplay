@@ -2,7 +2,7 @@
 GameFactories.runner = function (stage, ctx) {
   const t = ctx.t;
   const W = 420, H = 300, LANES = 3, LANE_H = H / LANES;
-  let lane = 1, score, level, speed, gates, over, spawnT, dist, raf = null, tick = null;
+  let lane = 1, score, level, gates, over, dist, tick = null;
 
   const hud = GameKit.hud(stage, [['score', t('game_score')], ['level', t('game_level')], ['best', t('game_best')]]);
   hud.best(GameKit.getBest('runner'));
@@ -16,24 +16,31 @@ GameFactories.runner = function (stage, ctx) {
 
   const GATE_GAP = 260, GATE_W = 64;
 
-  function makeGate(x) {
+  function makeGate(level, x) {
     const correct = Math.floor(Math.random() * LANES);
-    // question: a+b for level 1-2, then include ×
     let a, b, ans, text;
     if (level < 3) { a = 1 + Math.floor(Math.random() * 15); b = 1 + Math.floor(Math.random() * 15); ans = a + b; text = a + '+' + b; }
     else if (level < 5) { a = 2 + Math.floor(Math.random() * 10); b = 2 + Math.floor(Math.random() * 10); ans = a * b; text = a + '×' + b; }
-    else { a = 20 + Math.floor(Math.random() * 40); b = 5 + Math.floor(Math.random() * 25); ans = a - b; text = a + '−' + b; }
+    else { // subtraction: b < a - 5 keeps ans >= 6 so distractors always exist
+      a = 25 + Math.floor(Math.random() * 35);
+      b = Math.floor(Math.random() * (a - 5));
+      ans = a - b; text = a + '−' + b;
+    }
     const wrongs = new Set();
-    while (wrongs.size < LANES - 1) {
+    let guard = 80;
+    while (wrongs.size < LANES - 1 && guard-- > 0) {
       const d = ans + Math.floor(Math.random() * 11) - 5;
       if (d !== ans && d >= 0) wrongs.add(d);
     }
+    let k = 1;
+    while (wrongs.size < LANES - 1) wrongs.add(ans + k++);
+    const wArr = [...wrongs];
     const values = [];
     let wi = 0;
-    const wArr = [...wrongs];
     for (let i = 0; i < LANES; i++) values.push(i === correct ? ans : wArr[wi++]);
     return { x, correct, values, text, hit: false };
   }
+  GameFactories.runner._test = { makeGate };
 
   function draw() {
     g.fillStyle = '#10162b';
@@ -80,7 +87,7 @@ GameFactories.runner = function (stage, ctx) {
     dist += v;
     if (dist > GATE_GAP) {
       dist = 0;
-      gates.push(makeGate(W + 30));
+      gates.push(makeGate(level, W + 30));
     }
     gates = gates.filter(gate => gate.x > -GATE_W - 10);
     // collision
@@ -116,9 +123,9 @@ GameFactories.runner = function (stage, ctx) {
   function setLane(l) { if (!over) lane = Math.max(0, Math.min(LANES - 1, l)); }
 
   function start() {
-    score = 0; level = 1; gates = []; dist = GATE_GAP; over = false;
+    score = 0; level = 1; gates = []; dist = 0; over = false;
     hud.score(0); hud.level(1);
-    gates.push(makeGate(W));
+    gates.push(makeGate(level, W));
     draw();
   }
 
@@ -134,5 +141,5 @@ GameFactories.runner = function (stage, ctx) {
 
   start();
   tick = setInterval(loop, 1000 / 60);
-  return { destroy() { rmKeys(); if (tick) clearInterval(tick); if (raf) cancelAnimationFrame(raf); } };
+  return { destroy() { rmKeys(); if (tick) clearInterval(tick); } };
 };

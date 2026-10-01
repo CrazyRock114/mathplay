@@ -92,8 +92,9 @@ GameFactories.typing = function (stage, ctx) {
   }
 
   hint.addEventListener('input', onInput);
-  stage.addEventListener('pointerdown', () => { if (!done) hint.focus(); });
+  const onDown = () => { if (!done) hint.focus(); };
+  stage.addEventListener('pointerdown', onDown);
 
   start();
-  return { destroy() { if (timer) clearInterval(timer); } };
+  return { destroy() { if (timer) clearInterval(timer); stage.removeEventListener('pointerdown', onDown); } };
 };

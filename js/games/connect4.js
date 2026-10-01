@@ -12,7 +12,7 @@ GameFactories.connect4 = function (stage, ctx) {
   const cols = [];
   for (let x = 0; x < W; x++) {
     const col = GameKit.el('div', 'c4-col');
-    for (let y = 0; y < H; y++) col.appendChild(GameKit.el('div', 'c4-hole'));
+    for (let y = 0; y < H; y++) col.appendChild(GameKit.el('div', 'c4-hole', '<i></i>'));
     col.onclick = () => drop(x);
     boardEl.appendChild(col);
     cols.push(col);
@@ -98,6 +98,7 @@ GameFactories.connect4 = function (stage, ctx) {
     paint(x, y, 1);
     const w1 = findWins(board);
     if (w1) return finish(1, w1);
+    if (board.every(Boolean)) return finish(0); // board full with no line → draw
     turn = 2;
     status.textContent = t('game_thinking');
     busy = true;
@@ -124,7 +125,7 @@ GameFactories.connect4 = function (stage, ctx) {
     board = new Array(W * H).fill(0);
     turn = 1; over = false; busy = false;
     status.textContent = t('game_yourturn');
-    cols.forEach(c => [...c.children].forEach(h => h.className = 'c4-hole'));
+    cols.forEach(c => [...c.children].forEach(h => { h.className = 'c4-hole'; h.innerHTML = '<i></i>'; }));
   }
 
   function finish(winner, line) {

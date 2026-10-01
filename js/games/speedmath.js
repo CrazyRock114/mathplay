@@ -2,7 +2,7 @@
 GameFactories.speedmath = function (stage, ctx) {
   const t = ctx.t;
   const TOTAL = 60;
-  let score, sec, left, streak, q, timer = null, lock = false;
+  let score, sec, left, streak, q, penaltySec, timer = null, lock = false;
 
   const hud = GameKit.hud(stage, [['score', t('game_score')], ['best', t('game_best')]]);
   hud.best(GameKit.getBest('speedmath'));
@@ -54,16 +54,16 @@ GameFactories.speedmath = function (stage, ctx) {
 
   function answer(btn, v) {
     if (lock) return;
+    lock = true;
     if (v === q.ans) {
       btn.classList.add('ok');
       streak++;
       score++;
       hud.score(score);
-      setTimeout(next, 220);
+      setTimeout(() => { lock = false; next(); }, 220);
     } else {
       btn.classList.add('bad');
-      lock = true;
-      left = Math.max(0, left - 2);
+      penaltySec += 2;
       setTimeout(() => { lock = false; next(); }, 420);
     }
   }
@@ -72,14 +72,14 @@ GameFactories.speedmath = function (stage, ctx) {
 
   function tick() {
     sec++;
-    left = TOTAL - sec;
-    barEl.style.width = (left / TOTAL * 100) + '%';
+    left = TOTAL - sec - penaltySec;
+    barEl.style.width = Math.max(0, left / TOTAL * 100) + '%';
     if (left <= 0) end();
   }
 
   function start() {
     if (timer) clearInterval(timer);
-    score = 0; sec = 0; left = TOTAL; streak = 0; lock = false;
+    score = 0; sec = 0; left = TOTAL; streak = 0; penaltySec = 0; lock = false;
     hud.score(0);
     barEl.style.width = '100%';
     render();

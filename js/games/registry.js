@@ -264,6 +264,8 @@ const GameKit = {
   keys(handler) { /* arrow/wasd/space capture; returns remover */
     const map = { ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right', w: 'up', s: 'down', a: 'left', d: 'right', ' ': 'space' };
     const fn = e => {
+      const tgt = e.target;
+      if (tgt && (tgt.tagName === 'INPUT' || tgt.tagName === 'TEXTAREA' || tgt.isContentEditable)) return;
       const dir = map[e.key] || map[e.key.toLowerCase()];
       if (dir) { e.preventDefault(); handler(dir, e); }
     };

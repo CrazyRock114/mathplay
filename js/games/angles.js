@@ -21,14 +21,15 @@ GameFactories.angles = function (stage, ctx) {
   const slider = GameKit.el('input');
   slider.type = 'range'; slider.min = 10; slider.max = 80; slider.value = angle;
   const readout = GameKit.el('span', 'angles-readout', angle + '°');
-  const fireBtn = GameKit.el('button', 'g-btn primary', '🔥 ' + t('g_angles_t'));
+  const fireBtn = GameKit.el('button', 'g-btn primary', '🔥 ' + t('game_fire'));
   ctrl.appendChild(slider); ctrl.appendChild(readout); ctrl.appendChild(fireBtn);
   stage.appendChild(ctrl);
 
   const CX = 34, CY = H - 26;
 
   function newTarget() {
-    target = { x: 220 + Math.random() * 190, r: 22 };
+    // persist the shrunk radius across rounds for difficulty progression
+    target = { x: 220 + Math.random() * 190, r: target ? Math.max(12, target.r - 1.5) : 22 };
   }
 
   function traj(ang) { // simulate until below ground or past wall
@@ -56,7 +57,8 @@ GameFactories.angles = function (stage, ctx) {
       const step = 3;
       for (let k = 0; k < step && i < pts.length; k++, i++) trail.push(pts[i]);
       const [hx, hy] = trail[trail.length - 1];
-      if (Math.hypot(hx - target.x, hy - (H - 26 + 10)) < target.r + 8 ||
+      // hit = distance from the BALLOON CENTER (drawn at CY-44), not the ground
+      if (Math.hypot(hx - target.x, hy - (CY - 44)) < target.r + 8 ||
           (hy > H - 34 && Math.abs(hx - target.x) < target.r + 10)) {
         clearInterval(iv); hit(); return;
       }
@@ -72,8 +74,7 @@ GameFactories.angles = function (stage, ctx) {
     hud.hits(hits);
     GameKit.submit('angles', hits, true);
     hud.best(GameKit.getBest('angles'));
-    target.r = Math.max(12, target.r - 1.5);
-    newTarget();
+    newTarget(); // shrink handled inside newTarget
     draw();
   }
 

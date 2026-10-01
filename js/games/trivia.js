@@ -24,9 +24,9 @@ GameFactories.trivia = function (stage, ctx) {
     while (set.size < 4) {
       let d = correct + (rnd(spread) - Math.floor(spread / 2));
       if (Math.random() < 0.4) d = correct + rnd(spread) + 1;
-      if (d >= min && d !== correct) set.add(d);
+      if (d !== correct && d >= min) set.add(d);
     }
-    return [...set].sort(() => Math.random() - 0.5);
+    return [...set];
   };
 
   function prime(n) { if (n < 2) return false; for (let i = 2; i * i <= n; i++) if (n % i === 0) return false; return true; }
@@ -38,10 +38,35 @@ GameFactories.trivia = function (stage, ctx) {
       const pool = [11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53];
       correct = pool[rnd(pool.length)];
       text = t('tr_prime');
-    } else if (type === 'even') {
+      const set = new Set([correct]);
+      let guard = 400;
+      while (set.size < 4 && guard-- > 0) {
+        const d = 4 + rnd(60);
+        if (d !== correct && !prime(d)) set.add(d); // distractors must be composite
+      }
+      let f = 4;
+      while (set.size < 4) { if (f !== correct && !prime(f)) set.add(f); f++; }
+      return { text, opts: [...set].sort((a, b) => a - b), correct };
+    }
+    if (type === 'even') {
       correct = 2 * (2 + rnd(20));
       text = t('tr_even');
-    } else if (type === 'double') {
+      const set = new Set([correct]);
+      let guard = 300;
+      while (set.size < 4 && guard-- > 0) {
+        const d = 1 + 2 * rnd(50); // distractors are always odd
+        if (d !== correct) set.add(d);
+      }
+      return { text, opts: [...set].sort((a, b) => a - b), correct };
+    }
+    if (type === 'largest') {
+      const set = new Set();
+      while (set.size < 4) set.add(10 + rnd(90));
+      const opts = [...set];
+      correct = Math.max(...opts);
+      return { text: t('tr_largest'), opts: opts.sort(() => Math.random() - 0.5), correct };
+    }
+    if (type === 'double') {
       const n = 10 + rnd(40); correct = n * 2; text = t('tr_double', { n });
     } else if (type === 'half') {
       const n = 2 * (10 + rnd(40)); correct = n / 2; text = t('tr_half', { n });
@@ -51,12 +76,6 @@ GameFactories.trivia = function (stage, ctx) {
       const n = 2 + rnd(7); correct = n * 60; text = t('tr_minutes', { n });
     } else if (type === 'days') {
       const n = 3 + rnd(8); correct = n * 7; text = t('tr_days', { n });
-    } else if (type === 'largest') {
-      const four = opts4(0, 90, 10).map(v => v + 10);
-      correct = Math.max(...four);
-      const set = new Set(four);
-      while (set.size < 4) set.add(10 + rnd(90));
-      return { text, opts: [...set].sort(() => Math.random() - 0.5), correct };
     } else if (type === 'next') {
       const a = rnd(6) + 1, step = 2 + rnd(4);
       const start = 1 + rnd(8);
@@ -70,6 +89,7 @@ GameFactories.trivia = function (stage, ctx) {
     const spread = type === 'minutes' ? 130 : type === 'square' ? 15 : 12;
     return { text, opts: opts4(correct, spread, 1), correct };
   }
+  GameFactories.trivia._test = { makeQuestion, prime };
 
   function render() {
     hud.q(qNum + '/' + TOTAL);
@@ -113,10 +133,11 @@ GameFactories.trivia = function (stage, ctx) {
   }
 
   function end(done) {
+    const title = (done && score >= 10) ? t('game_win') : t('game_over');
     const r = GameKit.submit('trivia', score, true);
     hud.best(GameKit.getBest('trivia'));
     GameKit.overlay(stage, {
-      title: done ? (score >= 10 ? t('game_win') : t('game_over')) : t('game_over'),
+      title,
       stats: [[t('game_score'), score + '/' + TOTAL], [t('game_best'), r.value]],
       msg: r.isBest ? t('game_newbest') : '',
       btnLabel: t('game_again'),

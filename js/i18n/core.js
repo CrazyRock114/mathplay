@@ -65,7 +65,6 @@ const I18n = {
   apply(root = document) {
     root.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = this.t(el.dataset.i18n); });
     root.querySelectorAll('[data-i18n-ph]').forEach(el => { el.placeholder = this.t(el.dataset.i18nPh); });
-    root.querySelectorAll('[data-i18n-html]').forEach(el => { el.innerHTML = this.t(el.dataset.i18nHtml); });
   },
 
   onChange(fn) { this.listeners.push(fn); },
@@ -104,7 +103,14 @@ function initHeader() {
     const label = document.getElementById('langName');
     if (label) label.textContent = I18n.name(I18n.lang);
     btn.onclick = e => { e.stopPropagation(); menu.hidden = !menu.hidden; };
-    document.addEventListener('click', () => { menu.hidden = true; }, { once: false });
+    // bind the click-away closer exactly once (initHeader re-runs on every language change)
+    if (!I18n._menuCloseBound) {
+      I18n._menuCloseBound = true;
+      document.addEventListener('click', () => {
+        const m = document.getElementById('langMenu');
+        if (m && !m.hidden) m.hidden = true;
+      });
+    }
   }
 
   const form = document.getElementById('searchForm');

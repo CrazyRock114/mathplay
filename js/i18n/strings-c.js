@@ -78,6 +78,7 @@
     tr_missing: 'What is the missing number?  {a} + ? = {c}',
     tr_sides: 'How many sides does this shape have?',
     tr_sym: 'How many lines of symmetry does it have?',
+    game_fire: 'Fire', game_pay: 'Pay',
   };
 
   const zhCN = {
@@ -156,6 +157,7 @@
     tr_missing: '缺少的数是几？  {a} + ? = {c}',
     tr_sides: '这个图形有几条边？',
     tr_sym: '它有几条对称轴？',
+    game_fire: '发射', game_pay: '支付',
   };
 
   const zhTW = {
@@ -234,6 +236,7 @@
     tr_missing: '缺少的數是幾？  {a} + ? = {c}',
     tr_sides: '這個圖形有幾條邊？',
     tr_sym: '它有幾條對稱軸？',
+    game_fire: '發射', game_pay: '支付',
   };
 
   Object.assign(D.en, en);

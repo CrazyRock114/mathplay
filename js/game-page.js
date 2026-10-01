@@ -122,6 +122,7 @@
     s.onload = () => {
       if (instance && instance.destroy) instance.destroy();
       stage.innerHTML = '';
+      stage.className = 'stage';
       instance = GameFactories[meta.id](stage, { t: (k, v) => I18n.t(k, v), meta });
     };
     s.onerror = () => {
@@ -132,17 +133,20 @@
     document.head.appendChild(s);
   }
 
+  function rebuildGame() {
+    if (instance && instance.destroy) instance.destroy();
+    stage.innerHTML = '';
+    stage.className = 'stage'; // games add classes (win-bg etc.) that must not leak into the next run
+    instance = GameFactories[meta.id](stage, { t: (k, v) => I18n.t(k, v), meta });
+  }
+
   I18n.onChange(() => {
     I18n.apply();
     initHeader();
     renderTexts();
     renderRelated();
     // rebuild the running game so its labels follow the new language
-    if (meta && GameFactories[meta.id]) {
-      if (instance && instance.destroy) instance.destroy();
-      stage.innerHTML = '';
-      instance = GameFactories[meta.id](stage, { t: (k, v) => I18n.t(k, v), meta });
-    }
+    if (meta && GameFactories[meta.id]) rebuildGame();
   });
 
   if (meta) renderRelated();

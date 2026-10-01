@@ -21,13 +21,18 @@ GameFactories.dots = function (stage, ctx) {
 
   function buildDOM() {
     boardEl.innerHTML = '';
-    boardEl.style.gridTemplateColumns = '26px repeat(' + BOXES + ', 44px) 26px';
-    boardEl.style.gridTemplateRows = '26px repeat(' + BOXES + ', 44px) 26px';
+    // 7 tracks per axis: dot 26px alternating with 44px edge/box tracks
+    boardEl.style.gridTemplateColumns = '26px repeat(' + BOXES + ', 44px 26px)';
+    boardEl.style.gridTemplateRows = '26px repeat(' + BOXES + ', 44px 26px)';
     const dotAt = (gr, gc) => (gr % 2 === 0 && gc % 2 === 0);
     for (let gr = 0; gr < 2 * D - 1; gr++) {
       for (let gc = 0; gc < 2 * D - 1; gc++) {
         if (dotAt(gr, gc)) {
           boardEl.appendChild(GameKit.el('div', 'dots-dot'));
+          continue;
+        }
+        if (gr % 2 === 1 && gc % 2 === 1) { // box interior — placeholder, not a clickable edge
+          boardEl.appendChild(document.createElement('div'));
           continue;
         }
         let key;

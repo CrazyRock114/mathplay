@@ -196,7 +196,7 @@ const used = {};
   src.replace(/className\s*=\s*'([^']+)'/g, (m, c) => { c.split(/\s+/).forEach(x => { if (x) used[x] = 1; }); return m; });
   src.replace(/classList\.(?:add|toggle)\('([^']+)'/g, (m, c) => { used[c] = 1; return m; });
 });
-const DYNAMIC = /^(v\d+|n[1-8]|has-rot|active|on|win|lit|ok|bad|up|q|cur|flipped|matched|revealed|boom|flag|taken|mine|theirs|sel|err|given|gem|miss|open|pop|shake-panel?|win-bg|p1|p2|rg|bg|idle|wait|go|end|h|v|u|d|l|r|rot|x|o)$/;
+const DYNAMIC = /^(v\d+|n[1-8]|has-rot|active|on|win|lit|ok|bad|up|q|cur|flipped|matched|revealed|boom|flag|taken|mine|theirs|sel|err|given|gem|miss|open|pop|shake-panel|win-bg|p1|p2|rg|bg|idle|wait|go|end|h|v|u|d|l|r|rot|x|o)$/;
 const missingCss = Object.keys(used).filter(c => !cssClasses[c] && !DYNAMIC.test(c) && !/^(v|n)\d+$/.test(c));
 check('css-classes-closed', missingCss.length === 0, missingCss.slice(0, 8).join(','));
 

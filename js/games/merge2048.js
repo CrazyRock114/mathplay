@@ -95,6 +95,7 @@ GameFactories.merge2048 = function (stage, ctx) {
   }
 
   function finish(win) {
+    over = true; // stop input for both win and lose paths
     const r = GameKit.submit('merge2048', score, true);
     hud.best(GameKit.getBest('merge2048'));
     if (r.isBest) stage.classList.add('win-bg');

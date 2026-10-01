@@ -15,7 +15,7 @@ GameFactories.changeup = function (stage, ctx) {
   const trayEl = GameKit.el('div', 'change-tray');
   const traySum = GameKit.el('div', 'change-sum', '0.00');
   const coinsEl = GameKit.el('div', 'change-coins');
-  const payBtn = GameKit.el('button', 'g-btn primary', '💳 ' + t('game_start'));
+  const payBtn = GameKit.el('button', 'g-btn primary', '💳 ' + t('game_pay'));
   panel.appendChild(priceEl); panel.appendChild(trayEl); panel.appendChild(traySum);
   panel.appendChild(coinsEl); panel.appendChild(payBtn);
   stage.appendChild(panel);

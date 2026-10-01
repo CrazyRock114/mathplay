@@ -64,10 +64,9 @@
       domains.forEach(d => {
         d.topics.forEach(tid => {
           const count = GAMES.filter(g => (g.knowledge || []).includes(tid)).length;
-          const k = KNOWLEDGE.find(x => x.id === tid);
           const b = GameKit.el('button', 'know-chip' + (state.knowledge === tid ? ' active' : ''),
-            '<i style="background:' + k.color + '"></i>' + I18n.t('kn_' + tid) + '<em>' + count + '</em>');
-          if (state.knowledge === tid) b.style.borderColor = k.color;
+            '<i style="background:' + knowledgeColor(tid) + '"></i>' + I18n.t('kn_' + tid) + '<em>' + count + '</em>');
+          if (state.knowledge === tid) b.style.borderColor = knowledgeColor(tid);
           b.onclick = () => { state.knowledge = tid; renderKnowledgeRows(); renderGrid(); };
           topicNav.appendChild(b);
         });

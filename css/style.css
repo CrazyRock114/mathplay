@@ -537,6 +537,7 @@ svg,canvas{display:block;max-width:100%}
 .type-display .ok{color:#12b76a}
 .type-display .cur{color:#1f2430;border-bottom:5px solid var(--brand)}
 .type-display span{color:#c3cadb}
+.type-display.shake{animation:shake .3s}
 .type-input{position:absolute;opacity:0;left:-9999px}
 
 /* ---------------- responsive round 3 ---------------- */

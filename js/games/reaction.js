@@ -2,7 +2,7 @@
 GameFactories.reaction = function (stage, ctx) {
   const t = ctx.t;
   const ROUNDS = 5;
-  let state, round, times, shownAt, goTimer = null, penalty;
+  let state, times, shownAt, goTimer = null, armTimer = null, penalty;
 
   const hud = GameKit.hud(stage, [['round', t('game_round')], ['avg', t('game_avg')], ['best', t('game_best')]]);
 
@@ -29,9 +29,9 @@ GameFactories.reaction = function (stage, ctx) {
     panel.textContent = t('game_tapstart');
   }
 
-  function arm() {
+  function arm(keepPenalty) {
     state = 'wait';
-    penalty = false;
+    if (!keepPenalty) penalty = false;
     panel.className = 'react-panel wait';
     panel.textContent = t('game_ready');
     goTimer = setTimeout(() => {
@@ -43,13 +43,13 @@ GameFactories.reaction = function (stage, ctx) {
   }
 
   function click() {
-    if (state === 'idle') { round = 1; times = []; renderTimes(); hud.round('1/' + ROUNDS); arm(); return; }
+    if (state === 'idle') { times = []; renderTimes(); hud.round('1/' + ROUNDS); arm(); return; }
     if (state === 'wait') {
       penalty = true;
       clearTimeout(goTimer);
       panel.textContent = t('game_tooearly');
       state = 'penalty';
-      setTimeout(arm, 1100);
+      armTimer = setTimeout(() => arm(true), 1100);
       return;
     }
     if (state === 'go') {
@@ -61,7 +61,7 @@ GameFactories.reaction = function (stage, ctx) {
       state = 'shown';
       if (times.length >= ROUNDS) return end();
       hud.round((times.length + 1) + '/' + ROUNDS);
-      setTimeout(arm, 1300);
+      armTimer = setTimeout(arm, 1300);
     }
   }
 
@@ -82,5 +82,5 @@ GameFactories.reaction = function (stage, ctx) {
 
   panel.onclick = click;
   idle();
-  return { destroy() { if (goTimer) clearTimeout(goTimer); } };
+  return { destroy() { if (goTimer) clearTimeout(goTimer); if (armTimer) clearTimeout(armTimer); } };
 };

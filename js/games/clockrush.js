@@ -47,7 +47,7 @@ GameFactories.clockrush = function (stage, ctx) {
     const h = 1 + rnd(12);
     let m;
     if (!hardMode) m = 5 * rnd(12);
-    else if (hardMode < 3) m = rnd(24) * 5 + (rnd(2) ? 30 : 0); // quarter-ish
+    else if (hardMode < 3) m = 15 * rnd(4); // quarter hours: 0/15/30/45
     else m = rnd(60);
     const correct = pad(h) + ':' + pad(m);
     const set = new Set([correct]);
@@ -59,6 +59,7 @@ GameFactories.clockrush = function (stage, ctx) {
     }
     return { h, m, opts: [...set].sort(() => Math.random() - 0.5), correct };
   }
+  GameFactories.clockrush._test = { makeQuestion };
 
   function render() {
     q = makeQuestion();

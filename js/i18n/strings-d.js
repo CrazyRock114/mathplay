@@ -78,6 +78,7 @@
     tr_missing: 'かくれている数は？  {a} + ? = {c}',
     tr_sides: 'この図形のへんはいくつ？',
     tr_sym: '対称軸は何本？',
+    game_fire: '発射', game_pay: '支払う',
   };
 
   const it = {
@@ -156,6 +157,7 @@
     tr_missing: 'Qual è il numero mancante?  {a} + ? = {c}',
     tr_sides: 'Quanti lati ha questa forma?',
     tr_sym: 'Quante linee di simmetria ha?',
+    game_fire: 'Fuoco', game_pay: 'Paga',
   };
 
   const fr = {
@@ -234,6 +236,7 @@
     tr_missing: 'Quel est le nombre manquant ?  {a} + ? = {c}',
     tr_sides: 'Combien de côtés a cette forme ?',
     tr_sym: 'Combien d’axes de symétrie a-t-elle ?',
+    game_fire: 'Tirer', game_pay: 'Payer',
   };
 
   const de = {
@@ -312,6 +315,7 @@
     tr_missing: 'Welche Zahl fehlt?  {a} + ? = {c}',
     tr_sides: 'Wie viele Seiten hat diese Form?',
     tr_sym: 'Wie viele Symmetrieachsen hat sie?',
+    game_fire: 'Feuer', game_pay: 'Bezahlen',
   };
 
   Object.assign(D.ja, ja);
