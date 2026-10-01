@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MathPlay — Cool Math &amp; Brain Games</title>
+<meta name="description" content="Free original math, logic and skill games in 8 languages.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%AE%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <a class="logo" href="index.html" id="logo" aria-label="MathPlay"></a>
+    <form class="search" id="searchForm" role="search">
+      <input id="searchInput" type="search" autocomplete="off" data-i18n-ph="search_ph">
+      <button type="submit" aria-label="search">🔍</button>
+    </form>
+    <div class="header-actions">
+      <button class="icon-btn" id="randomBtn" title="🎲">🎲</button>
+      <div class="lang">
+        <button class="lang-btn" id="langBtn">🌐 <span id="langName">English</span> <span style="font-size:11px">▼</span></button>
+        <div class="lang-menu" id="langMenu" hidden></div>
+      </div>
+    </div>
+  </div>
+  <nav class="cats-nav" id="catsNav"></nav>
+  <nav class="know-nav" id="knowNav"></nav>
+  <nav class="know-nav topics" id="topicNav"></nav>
+</header>
+
+<main>
+  <section class="hero" id="hero"></section>
+  <section class="section" id="recentSection" hidden>
+    <h2 data-i18n="recent_title"></h2>
+    <div class="recent-row" id="recentRow"></div>
+  </section>
+  <section class="section">
+    <h2 data-i18n="home_all"></h2>
+    <div class="grid" id="grid"></div>
+    <p class="noresult" id="noResult" data-i18n="search_none" hidden></p>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="foot-grid">
+    <div>
+      <div class="foot-logo" id="footLogo"></div>
+      <p class="foot-about" data-i18n="footer_about_text"></p>
+    </div>
+    <div class="foot-col">
+      <h4 data-i18n="footer_cats"></h4>
+      <a href="index.html?cat=numbers" data-i18n="cat_numbers"></a>
+      <a href="index.html?cat=logic" data-i18n="cat_logic"></a>
+      <a href="index.html?cat=memory" data-i18n="cat_memory"></a>
+      <a href="index.html?cat=skill" data-i18n="cat_skill"></a>
+      <a href="index.html?cat=strategy" data-i18n="cat_strategy"></a>
+      <a href="index.html?cat=puzzle" data-i18n="cat_puzzle"></a>
+    </div>
+    <div class="foot-col">
+      <h4 data-i18n="nav_all"></h4>
+      <a href="index.html" data-i18n="nav_home"></a>
+      <a href="index.html" data-i18n="nav_all"></a>
+    </div>
+    <div class="foot-col">
+      <h4 data-i18n="footer_langs"></h4>
+      <button onclick="I18n.set('en')">English</button>
+      <button onclick="I18n.set('zh-CN')">简体中文</button>
+      <button onclick="I18n.set('zh-TW')">繁體中文</button>
+      <button onclick="I18n.set('ja')">日本語</button>
+      <button onclick="I18n.set('zh')">汉语</button>
+      <button onclick="I18n.set('it')">Italiano</button>
+      <button onclick="I18n.set('fr')">Français</button>
+      <button onclick="I18n.set('de')">Deutsch</button>
+    </div>
+  </div>
+  <p class="foot-note" data-i18n="footer_note"></p>
+  <p class="foot-rights" data-i18n="footer_rights"></p>
+</footer>
+
+<script src="js/games/registry.js"></script>
+<script src="js/i18n/strings-a.js"></script>
+<script src="js/i18n/strings-b.js"></script>
+<script src="js/i18n/strings-c.js"></script>
+<script src="js/i18n/strings-d.js"></script>
+<script src="js/i18n/strings-e.js"></script>
+<script src="js/i18n/strings-f.js"></script>
+<script src="js/i18n/core.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
