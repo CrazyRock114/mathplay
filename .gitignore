@@ -2,3 +2,5 @@
 *.log
 .vercel
 .env*
+!.env.example
+!.env.sample
