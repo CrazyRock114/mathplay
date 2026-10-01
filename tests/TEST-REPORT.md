@@ -60,7 +60,34 @@ D6 已修复并验证（20° 实测命中、最佳分持久化）。当前状态
 - Oracle B 初版 title 断言过弱（含"MathPlay"即过），被英语回落内容空过——改为与字典逐字相等。
 - 全部 14 处脚本错误修复后复跑，同一把尺最终 0 fail；无"修尺子到全绿但未解释"的黑箱操作（每次校准均可在上表溯源）。
 
-## 七、明确没测什么 + 残余风险
+## 七、OCR 全量代码审查轮（外部 deepseek-flash 审查，commit 72a867d，42 文件）
+
+- 输入：`ocr-review-initial-release.json`（84 条：1 Critical / 8 High / 21 Medium / 54 Low）
+- 处理：84 条全部四态定性（逐条对照当前源码 + 玩法级探针），**确认 24 处真缺陷并全部修复**；
+  其余为风格/维护性建议（记录在案、按"断言强度>数量"豁免）或误报（如 V6 首次失败实为后台标签页
+  transition 节流，非产品缺陷——规则匹配与背景渐变均已生效）。
+- 疫苗：新增 `tests/vaccine-generators.js`（9 项端到端断言）：runner 门生成器 480 次性质检验、
+  balance 方程算术一致性 80 次、clockrush 分钟值域 120 次、trivia 属性互斥/无 undefined 300 次、
+  coords 全程无死锁、connect4 棋子可见性、dots 结构不变量、搜索框按键不被劫持、speedmath 防双击。
+- 回归：修复后 A 378 + B1 219 + B2 86 + B3 21 + 疫苗 9 = **739 项全绿**；已推送（901c009）并重新部署。
+
+### OCR 轮确认的真缺陷（全部修复 + 疫苗）
+
+| # | 级别 | 缺陷 | 位置 |
+|---|---|---|---|
+| D7 | Critical | 减法关答案可为负 → 候选门生成 while 死循环冻结浏览器 | runner.js:25-27 |
+| D8 | High | 除法方程把答案 x 显示在等号右侧，题不可解 | balance.js:48 |
+| D9 | High | 分钟生成 0–145（"05:145"），指针错乱 | clockrush.js:50 |
+| D10 | High | found 用局部索引过滤全局索引 → 线索指向已挖格死锁 | coords.js:32 |
+| D11 | High | 棋子样式依赖 `<i>` 子元素但 JS 从未创建 → 落子隐形 | connect4.js:15 + css:303 |
+| D12 | High | largest 题干未赋值 → 显示 "undefined" | trivia.js |
+| D13 | High | 偶数/质数题干扰项无属性互斥 → 多个合法答案冤枉判负 | trivia.js |
+| D14 | High | CSS Grid 5 轨道 vs 49 节点 → 棋盘排版错乱 | dots.js:24 |
+| D15 | High | 方块中心生成幻影边按钮（非法 key）→ 点错白送回合 | dots.js |
+| D16-D24 | Medium | speedmath 双击刷分+罚时被覆盖；reaction 罚时被 arm() 重置；blocks 提速失效；merge2048 胜局后仍可输入；duel 负数减法；angles 碰撞点在气球下方 54px+缩放重置；搜索框被全局按键劫持（空格都无法输入）；语言菜单监听器泄漏；typing 监听器泄漏；stage 类名跨局残留；runner 首帧双门；coords 最佳分不初始化；connect4 平局只在 CPU 手后检测 | 各文件 |
+| D25 | Low | fire/pay 按钮复用错误词条；.shake 类未定义；data-i18n-html XSS 死码移除 | 各文件 |
+
+## 八、明确没测什么 + 残余风险
 
 - 未测：游戏难度调平衡、音效正确性、性能/负载、Chromium 以外浏览器、真实多点触控、长会话内存曲线（仅静态审计 + 单例运行时验证）。
 - 基线限制：项目无 git 仓库，无法"新克隆钉 commit"式基线锁定；指纹以文件长度代替 MD5 互证。
